@@ -1,0 +1,25 @@
+plugins {
+    id 'war'
+    id 'java'
+    id 'org.springframework.boot' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.5'
+}
+
+dependencies {
+    implementation project(':gateway-service')
+    implementation project(':user-management')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = false
+}
+
+war {
+    enabled = true
+}
