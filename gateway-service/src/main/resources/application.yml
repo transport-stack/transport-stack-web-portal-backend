@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: user-management
+            uri: lb://USER-MANAGEMENT
+            predicates:
+              - Path=/user-management/**
