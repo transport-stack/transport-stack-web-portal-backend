@@ -1,2 +1,2 @@
 #!/bin/bash
-rm -rf /opt/tomcat/webapps/deploy-test*
+rm -rf /opt/tomcat/webapps/runner-service*
