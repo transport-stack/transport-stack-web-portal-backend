@@ -24,10 +24,10 @@ import java.util.UUID;
 @Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    @Value("${aws.userPoolId: ap-south-1_RZHvCpZHy}")
+    @Value("${aws.userPoolId}")
     private String userPoolId;
 
-    @Value("${spring.security.oauth2.client.registration.cognito.client-id: joicng34vtnld0g0umn0gon94}")
+    @Value("${spring.security.oauth2.client.registration.cognito.client-id}")
     private String clientId;
 
     private final AWSCognitoIdentityProvider cognitoIdentityProvider;

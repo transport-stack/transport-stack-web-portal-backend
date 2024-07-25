@@ -39,10 +39,10 @@ public class SecurityConfig {
     private final JWEAlgorithm jweAlgorithm = JWEAlgorithm.RSA_OAEP_256;
     private final EncryptionMethod encryptionMethod = EncryptionMethod.A256GCM;
 
-    @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri: https://cognito-idp.ap-south-1.amazonaws.com/ap-south-1_RZHvCpZHy/.well-known/jwks.json}")
+    @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
     URL jwkSetUri;
 
-    @Value("${jwt.jwe-key-value: classpath:rsa-key.priv}")
+    @Value("${jwt.jwe-key-value}")
     RSAPrivateKey key;
 
     @Bean
