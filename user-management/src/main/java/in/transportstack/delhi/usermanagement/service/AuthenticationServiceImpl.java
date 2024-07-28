@@ -6,14 +6,12 @@ import com.nimbusds.jwt.JWTParser;
 import in.transportstack.delhi.core.entity.User;
 import in.transportstack.delhi.core.repository.UserRepository;
 import in.transportstack.delhi.sharedconfig.util.EncryptionUtil;
-import in.transportstack.delhi.usermanagement.dto.LoginUserRequestDto;
-import in.transportstack.delhi.usermanagement.dto.LoginUserResponseDto;
-import in.transportstack.delhi.usermanagement.dto.RegisterUserRequestDto;
-import in.transportstack.delhi.usermanagement.dto.RegisterUserResponseDto;
+import in.transportstack.delhi.usermanagement.dto.*;
 import in.transportstack.delhi.usermanagement.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -180,6 +178,82 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } catch (Exception e) {
             log.error(e.getMessage());
             return new RegisterUserResponseDto("User registration failed: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public LogoutUserResponseDto logoutUser(LogoutUserRequestDto logoutUserRequestDto) {
+        if (ObjectUtils.isEmpty(logoutUserRequestDto.getAccessToken())) {
+            return new LogoutUserResponseDto("AccessToken is null");
+        }
+
+        try {
+            GlobalSignOutRequest signOutRequest = new GlobalSignOutRequest()
+                    .withAccessToken(logoutUserRequestDto.getAccessToken());
+            cognitoIdentityProvider.globalSignOut(signOutRequest);
+            return new LogoutUserResponseDto("Logout successful");
+
+        } catch(Exception e) {
+            log.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    @Override
+    public ChangePasswordResponseDto changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
+        try {
+            ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest()
+                    .withAccessToken(changePasswordRequestDto.getAccessToken())
+                    .withPreviousPassword(changePasswordRequestDto.getOldPassword())
+                    .withProposedPassword(changePasswordRequestDto.getNewPassword());
+            cognitoIdentityProvider.changePassword(changePasswordRequest);
+
+            return new ChangePasswordResponseDto("Password updated successfully");
+
+        } catch(Exception e) {
+            log.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    @Override
+    public ForgotPasswordResponseDto forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto) {
+        if (ObjectUtils.isEmpty(forgotPasswordRequestDto.getUsername())) {
+            return new ForgotPasswordResponseDto("Username is null");
+        }
+
+        try {
+            if (!userRepository.existsByEmail(forgotPasswordRequestDto.getUsername())) {
+                return new ForgotPasswordResponseDto("User Does Not Exist.");
+            }
+
+            ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest()
+                    .withUsername(forgotPasswordRequestDto.getUsername())
+                    .withClientId(clientId);
+            ForgotPasswordResult result = cognitoIdentityProvider.forgotPassword(forgotPasswordRequest);
+            log.info("Forgot password result: {}", result.toString());
+            return new ForgotPasswordResponseDto("Password reset initiated. Please check your email for the verification code.");
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    @Override
+    public ForgotPasswordResponseDto confirmForgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto) {
+        try {
+            ConfirmForgotPasswordRequest confirmRequest = new ConfirmForgotPasswordRequest()
+                    .withUsername(forgotPasswordRequestDto.getUsername())
+                    .withConfirmationCode(forgotPasswordRequestDto.getConfirmationCode())
+                    .withPassword(forgotPasswordRequestDto.getNewPassword())
+                    .withClientId(clientId);
+            ConfirmForgotPasswordResult result = cognitoIdentityProvider.confirmForgotPassword(confirmRequest);
+            return new ForgotPasswordResponseDto("Password reset successful");
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return null;
         }
     }
 

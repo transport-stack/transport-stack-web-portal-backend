@@ -1,9 +1,6 @@
 package in.transportstack.delhi.usermanagement.controller;
 
-import in.transportstack.delhi.usermanagement.dto.LoginUserRequestDto;
-import in.transportstack.delhi.usermanagement.dto.LoginUserResponseDto;
-import in.transportstack.delhi.usermanagement.dto.RegisterUserRequestDto;
-import in.transportstack.delhi.usermanagement.dto.RegisterUserResponseDto;
+import in.transportstack.delhi.usermanagement.dto.*;
 import in.transportstack.delhi.usermanagement.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +40,52 @@ public class UserController {
             throws Exception {
         RegisterUserResponseDto registerUserResponseDto = authenticationService.registerUser(registerUserRequestDto);
         return ResponseEntity.ok(registerUserResponseDto);
+    }
+
+    /** TODO: Implement functionality to fetch JWT from header or from logged in user(Principal)
+     * and remove it from request body
+     */
+    @PostMapping(value = "/logout", consumes = {"application/json"})
+    public ResponseEntity<LogoutUserResponseDto> logoutUser(@Valid @RequestBody LogoutUserRequestDto logoutUserRequestDto) {
+        LogoutUserResponseDto logoutUserResponseDto = authenticationService.logoutUser(logoutUserRequestDto);
+        if (logoutUserResponseDto != null) {
+            return ResponseEntity.ok(logoutUserResponseDto);
+        }
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body(new LogoutUserResponseDto("Unable to logout user"));
+    }
+
+    /** TODO: Implement functionality to fetch JWT from header or from logged in user(Principal)
+     * and remove it from request body
+     */
+    @PostMapping(value = "/change-password", consumes = {"application/json"})
+    public ResponseEntity<ChangePasswordResponseDto> changePassword(@Valid @RequestBody ChangePasswordRequestDto changePasswordRequestDto) {
+        ChangePasswordResponseDto changePasswordResponseDto = authenticationService.changePassword(changePasswordRequestDto);
+        if (changePasswordResponseDto != null) {
+            return ResponseEntity.ok(changePasswordResponseDto);
+        }
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body(new ChangePasswordResponseDto("Unable to change password"));
+    }
+
+    @PostMapping(value = "/forgot-password", consumes = {"application/json"})
+    public ResponseEntity<ForgotPasswordResponseDto> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDto forgotPasswordRequestDto) {
+        ForgotPasswordResponseDto forgotPasswordResponseDto = authenticationService.forgotPassword(forgotPasswordRequestDto);
+        if (forgotPasswordResponseDto != null) {
+            return ResponseEntity.ok(forgotPasswordResponseDto);
+        }
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body(new ForgotPasswordResponseDto("Unable to proceed with forgot password"));
+    }
+
+    @PostMapping(value = "/confirm-forgot-password", consumes = {"application/json"})
+    public ResponseEntity<ForgotPasswordResponseDto> confirmForgotPassword(@Valid @RequestBody ForgotPasswordRequestDto forgotPasswordRequestDto) {
+        ForgotPasswordResponseDto forgotPasswordResponseDto = authenticationService.confirmForgotPassword(forgotPasswordRequestDto);
+        if (forgotPasswordResponseDto != null) {
+            return ResponseEntity.ok(forgotPasswordResponseDto);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ForgotPasswordResponseDto("Unable to proceed with forgot password"));
     }
 
     @GetMapping("/secured")

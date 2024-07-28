@@ -47,23 +47,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(
-                requests -> requests
-                        .requestMatchers("api/user/login")
-                        .permitAll()
-                    .requestMatchers("/user-management/user/login")
-                    .permitAll()
-                    .requestMatchers("/user-management/register/user")
-                    .permitAll()
-                    .requestMatchers("/user-management/logout")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated()
-            )
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+        http.authorizeHttpRequests(requests -> requests
+                        .requestMatchers("api/user/login").permitAll()
+                        .requestMatchers("api/user/register").permitAll()
+                        .requestMatchers("api/user/forgot-password").permitAll()
+                        .requestMatchers("api/user/confirm-forgot-password").permitAll()
+                        .anyRequest().authenticated())
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
+                        jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
 
         http.csrf(AbstractHttpConfigurer::disable);
-
         return http.build();
     }
 

@@ -1,11 +1,12 @@
 package in.transportstack.delhi.usermanagement.service;
 
-import in.transportstack.delhi.usermanagement.dto.LoginUserResponseDto;
-import in.transportstack.delhi.usermanagement.dto.LoginUserRequestDto;
-import in.transportstack.delhi.usermanagement.dto.RegisterUserRequestDto;
-import in.transportstack.delhi.usermanagement.dto.RegisterUserResponseDto;
+import in.transportstack.delhi.usermanagement.dto.*;
 
 public interface AuthenticationService {
     LoginUserResponseDto loginUser(LoginUserRequestDto loginUserRequestDto);
     RegisterUserResponseDto registerUser(RegisterUserRequestDto registerUserRequestDto) throws Exception;
+    LogoutUserResponseDto logoutUser(LogoutUserRequestDto logoutUserRequestDto);
+    ChangePasswordResponseDto changePassword(ChangePasswordRequestDto changePasswordRequestDto);
+    ForgotPasswordResponseDto forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto);
+    ForgotPasswordResponseDto confirmForgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto);
 }
