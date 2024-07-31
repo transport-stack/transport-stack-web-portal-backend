@@ -6,9 +6,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -28,5 +32,9 @@ public class ServiceProviderMaster extends Auditable<String> {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "service_id")
     private Service service;
+
+    public ServiceProviderMaster(String name) {
+        this.name = name;
+    }
 
 }

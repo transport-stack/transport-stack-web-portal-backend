@@ -33,4 +33,7 @@ public class DataProviderMaster extends Auditable<String> {
     @JoinColumn(name = "data_set_id")
     private DataSet dataSet;
 
+    public DataProviderMaster(String name) {
+        this.name = name;
+    }
 }

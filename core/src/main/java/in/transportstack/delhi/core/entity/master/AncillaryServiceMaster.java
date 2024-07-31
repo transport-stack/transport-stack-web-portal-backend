@@ -28,4 +28,7 @@ public class AncillaryServiceMaster extends Auditable<String> {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    public AncillaryServiceMaster(String name) {
+        this.name = name;
+    }
 }

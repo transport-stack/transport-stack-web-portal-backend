@@ -28,4 +28,7 @@ public class ApprovalMechanismMaster extends Auditable<String> {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    public ApprovalMechanismMaster(String name) {
+        this.name = name;
+    }
 }

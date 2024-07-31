@@ -28,4 +28,7 @@ public class DataAccessTypeMaster extends Auditable<String> {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    public DataAccessTypeMaster(String name) {
+        this.name = name;
+    }
 }

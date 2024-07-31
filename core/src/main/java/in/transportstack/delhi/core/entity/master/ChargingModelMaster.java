@@ -28,4 +28,7 @@ public class ChargingModelMaster extends Auditable<String> {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    public ChargingModelMaster(String name) {
+        this.name = name;
+    }
 }

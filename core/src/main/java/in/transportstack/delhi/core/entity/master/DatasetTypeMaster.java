@@ -28,4 +28,7 @@ public class DatasetTypeMaster extends Auditable<String> {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    public DatasetTypeMaster(String name) {
+        this.name = name;
+    }
 }

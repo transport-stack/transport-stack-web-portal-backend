@@ -27,4 +27,8 @@ public class TransportModeMaster extends Auditable<String> {
     @NotNull(message = "Name cannot be null")
     @Column(name = "name", nullable = false, unique = true)
     private String name;
+
+    public TransportModeMaster(String name) {
+        this.name = name;
+    }
 }
