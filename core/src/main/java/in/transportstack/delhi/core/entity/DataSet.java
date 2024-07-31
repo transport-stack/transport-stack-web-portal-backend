@@ -72,9 +72,9 @@ public class DataSet extends Auditable {
     @JoinColumn(name = "data_access_type_id")
     private DataAccessTypeMaster dataAccessType;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "data_provider_id")
-    private DataProviderMaster dataProvider;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "dataSet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<DataProviderMaster> dataProvider = new LinkedHashSet<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "dataset_type_id")
