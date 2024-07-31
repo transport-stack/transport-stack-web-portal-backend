@@ -19,7 +19,7 @@ import java.util.UUID;
 @ToString
 @Entity
 @Table(name = "service_document")
-public class ServiceDocument extends Auditable {
+public class ServiceDocument extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)

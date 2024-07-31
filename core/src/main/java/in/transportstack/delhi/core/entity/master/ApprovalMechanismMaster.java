@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "approval_mechanism_master")
-public class ApprovalMechanismMaster extends Auditable {
+public class ApprovalMechanismMaster extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

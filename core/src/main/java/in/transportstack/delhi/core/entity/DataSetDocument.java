@@ -20,7 +20,7 @@ import java.util.UUID;
 @ToString
 @Entity
 @Table(name = "data_set_document")
-public class DataSetDocument extends Auditable {
+public class DataSetDocument extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
