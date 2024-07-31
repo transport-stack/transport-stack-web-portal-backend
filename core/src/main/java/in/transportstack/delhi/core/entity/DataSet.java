@@ -74,7 +74,7 @@ public class DataSet extends Auditable<String> {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "dataSet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<DataProviderMaster> dataProvider = new LinkedHashSet<>();
+    private Set<DataProviderMaster> dataProviders = new LinkedHashSet<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "dataset_type_id")
@@ -89,15 +89,15 @@ public class DataSet extends Auditable<String> {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "dataSet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<DataSetDocument> document = new LinkedHashSet<>();
+    private Set<DataSetDocument> documents = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OneToMany(mappedBy = "dataSet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<DataSetDocument> dataFile = new LinkedHashSet<>();
+    private Set<DataSetDocument> dataFiles = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OneToMany(mappedBy = "dataSet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<DataSetDocument> licenseAgreement = new LinkedHashSet<>();
+    private Set<DataSetDocument> licenseAgreements = new LinkedHashSet<>();
 
     @Column(name = "is_soft_delete")
     private Boolean isSoftDelete;

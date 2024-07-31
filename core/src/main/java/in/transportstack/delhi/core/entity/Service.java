@@ -61,9 +61,8 @@ public class Service extends Auditable<String> {
     @JoinColumn(name = "transport_mode_id")
     private TransportModeMaster transportMode;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "service_provider_id")
-    private ServiceProviderMaster serviceProvider;
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ServiceProviderMaster> serviceProviders = new LinkedHashSet<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "approval_mechanism_id")
@@ -77,7 +76,7 @@ public class Service extends Auditable<String> {
     private Set<ServiceDocument> serviceDocuments = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ServiceDocument> licenseAgreement = new LinkedHashSet<>();
+    private Set<ServiceDocument> licenseAgreements = new LinkedHashSet<>();
 
     @Column(name = "is_soft_delete")
     private Boolean isSoftDelete;
