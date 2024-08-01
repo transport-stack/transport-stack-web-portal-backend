@@ -2,15 +2,19 @@ package in.transportstack.delhi.usermanagement.service;
 
 import in.transportstack.delhi.core.entity.DataSet;
 import in.transportstack.delhi.core.entity.DataSetDocument;
+import in.transportstack.delhi.core.entity.master.AncillaryServiceMaster;
+import in.transportstack.delhi.core.entity.master.DataProviderMaster;
 import in.transportstack.delhi.core.entity.type.UploadType;
 import in.transportstack.delhi.core.repository.DataSetDocumentRepository;
 import in.transportstack.delhi.core.repository.DataSetRepository;
+import in.transportstack.delhi.core.repository.master.*;
 import in.transportstack.delhi.sharedconfig.dto.UploadFileResponseDto;
 import in.transportstack.delhi.sharedconfig.service.FileService;
 import in.transportstack.delhi.usermanagement.dto.DataSetListDto;
 import in.transportstack.delhi.usermanagement.dto.DataSetRequestDto;
 import in.transportstack.delhi.usermanagement.dto.DataSetResponseDto;
 import in.transportstack.delhi.usermanagement.mapper.DataSetMapper;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -21,7 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -34,17 +40,40 @@ public class DataSetServiceImpl implements DataSetService {
     private final DataSetRepository dataSetRepository;
     private final DataSetDocumentRepository dataSetDocumentRepository;
     private final FileService fileService;
-
+    private final AncillaryServiceMasterRepository ancillaryServiceMasterRepository;
+    private final ApprovalMechanismMasterRepository approvalMechanismMasterRepository;
+    private final ChargingModelMasterRepository chargingModelMasterRepository;
+    private final DataAccessTypeMasterRepository dataAccessTypeMasterRepository;
+    private final DataProviderMasterRepository dataProviderMasterRepository;
+    private final DatasetTypeMasterRepository datasetTypeMasterRepository;
+    private final ServiceProviderMasterRepository serviceProviderMasterRepository;
+    private final TransportModeMasterRepository transportModeMasterRepository;
     public DataSetServiceImpl(
             DataSetMapper dataSetMapper,
             DataSetRepository dataSetRepository,
             DataSetDocumentRepository dataSetDocumentRepository,
-            FileService fileService
+            FileService fileService,
+            AncillaryServiceMasterRepository ancillaryServiceMasterRepository,
+            ApprovalMechanismMasterRepository approvalMechanismMasterRepository,
+            ChargingModelMasterRepository chargingModelMasterRepository,
+            DataAccessTypeMasterRepository dataAccessTypeMasterRepository,
+            DataProviderMasterRepository dataProviderMasterRepository,
+            DatasetTypeMasterRepository datasetTypeMasterRepository,
+            ServiceProviderMasterRepository serviceProviderMasterRepository,
+            TransportModeMasterRepository transportModeMasterRepository
     ) {
         this.dataSetMapper = dataSetMapper;
         this.dataSetRepository = dataSetRepository;
         this.dataSetDocumentRepository = dataSetDocumentRepository;
         this.fileService = fileService;
+        this.ancillaryServiceMasterRepository=ancillaryServiceMasterRepository;
+        this.approvalMechanismMasterRepository=approvalMechanismMasterRepository;
+        this.dataAccessTypeMasterRepository=dataAccessTypeMasterRepository;
+        this.dataProviderMasterRepository=dataProviderMasterRepository;
+        this.datasetTypeMasterRepository=datasetTypeMasterRepository;
+        this.serviceProviderMasterRepository=serviceProviderMasterRepository;
+        this.chargingModelMasterRepository=chargingModelMasterRepository;
+        this.transportModeMasterRepository=transportModeMasterRepository;
     }
 
     @Override
@@ -55,6 +84,49 @@ public class DataSetServiceImpl implements DataSetService {
 
         // Mapper will map all the field accordingly
         DataSet dataSet = dataSetMapper.toEntity(dataSetRequestDto);
+
+        // Set Ancillary Mechanism
+        dataSet.setAncillaryService(ancillaryServiceMasterRepository.findById(dataSetRequestDto.getAncillaryServiceId())
+                .orElseThrow(() -> new EntityNotFoundException("AncillaryServiceMaster not found")));
+
+        // Set Approval Mechanism
+        dataSet.setApprovalMechanism(
+                approvalMechanismMasterRepository.findById(dataSetRequestDto.getApprovalMechanismId())
+                        .orElseThrow(() -> new EntityNotFoundException("ApprovalMechanismMaster not found"))
+        );
+
+        // Set Data Access Type
+        dataSet.setDataAccessType(
+                dataAccessTypeMasterRepository.findById(dataSetRequestDto.getDataAccessTypeId())
+                        .orElseThrow(() -> new EntityNotFoundException("DataAccessTypeMaster not found"))
+        );
+
+        // Set Data Provider
+        Set<DataProviderMaster> dataProviders = dataSetRequestDto.getDataProviderIds().stream()
+                .map(id -> dataProviderMasterRepository.findById(id)
+                        .orElseThrow(() -> new EntityNotFoundException("DataProviderMaster not found with id: " + id)))
+                .collect(Collectors.toSet());
+        dataSet.setDataProviders(dataProviders);
+
+        // Set Dataset Type
+        dataSet.setDatasetType(
+                datasetTypeMasterRepository.findById(dataSetRequestDto.getDatasetTypeId())
+                        .orElseThrow(() -> new EntityNotFoundException("DatasetTypeMaster not found"))
+        );
+
+
+        // Set Charging Model
+        dataSet.setChargingModel(
+                chargingModelMasterRepository.findById(dataSetRequestDto.getChargingModelId())
+                        .orElseThrow(() -> new EntityNotFoundException("ChargingModelMaster not found"))
+        );
+
+        // Set Transport Mode
+        dataSet.setTransportMode(
+                transportModeMasterRepository.findById(dataSetRequestDto.getTransportModeId())
+                        .orElseThrow(() -> new EntityNotFoundException("TransportModeMaster not found"))
+        );
+
 
         try {
             // Saving DataSet
@@ -83,9 +155,14 @@ public class DataSetServiceImpl implements DataSetService {
             dataSetDocument.setTitle(title);
             dataSetDocument.setUrl(uploadFileResponseDto.getFileUrl());
             dataSetDocument.setUploadType(fileUploadType);
-            dataSetDocument.setKey(uploadFileResponseDto.getFileName());
+            dataSetDocument.setDocumentKey(uploadFileResponseDto.getFileName());
+            //dataSetDocument.setDataSet(new DataSet());
+            DataSetDocument dataSetDocumentObj=dataSetDocumentRepository.save(dataSetDocument);
+             return dataSetDocumentObj.getId();
 
-            return dataSetDocumentRepository.save(dataSetDocument).getId();
+
+
+
 
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -107,7 +184,7 @@ public class DataSetServiceImpl implements DataSetService {
     public String deleteFile(UUID id) {
         Optional<DataSetDocument> dataSetDocument = dataSetDocumentRepository.findById(id);
         if (dataSetDocument.isPresent()) {
-            String fileKey = dataSetDocument.get().getKey();
+            String fileKey = dataSetDocument.get().getDocumentKey();
             fileService.delete(fileKey, bucketName);
             dataSetDocumentRepository.delete(dataSetDocument.get());
             return "Document deleted successfully " + id;
