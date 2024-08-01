@@ -1,11 +1,18 @@
 package in.transportstack.delhi.usermanagement.controller;
 
+import in.transportstack.delhi.core.entity.type.UploadType;
 import in.transportstack.delhi.usermanagement.dto.DataSetRequestDto;
 import in.transportstack.delhi.usermanagement.service.DataSetService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/dataset")
@@ -22,5 +29,35 @@ public class DataSetController {
     @PostMapping(value = "/create", consumes = {"application/json"})
     public ResponseEntity<?> createDataSet(@Valid @RequestBody DataSetRequestDto dataSetRequestDto) {
         return ResponseEntity.ok(dataSetService.createDataSet(dataSetRequestDto));
+    }
+
+    @PostMapping(value = "/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
+                                        @RequestParam("title") String title,
+                                        @RequestParam("fileUploadType") UploadType fileUploadType) {
+        UUID uuid = dataSetService.uploadFile(file, title, fileUploadType);
+
+        if (uuid != null) {
+            return ResponseEntity.ok(uuid.toString());
+        }
+
+        return ResponseEntity.badRequest().body("Unable to upload file");
+    }
+
+    @GetMapping(value = "/download")
+    public ResponseEntity<ByteArrayResource> downloadFile(@RequestParam("key") String key) {
+        byte[] data = dataSetService.downloadFile(key);
+        ByteArrayResource resource = new ByteArrayResource(data);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + key + "\"")
+                .body(resource);
+    }
+
+    @PostMapping(value = "/delete")
+    public ResponseEntity<String> deleteFile(@RequestParam("id") UUID id) {
+        String response = dataSetService.deleteFile(id);
+        return ResponseEntity.ok(response);
     }
 }
