@@ -2,7 +2,6 @@ package in.transportstack.delhi.usermanagement.service;
 
 import in.transportstack.delhi.core.entity.DataSet;
 import in.transportstack.delhi.core.entity.DataSetDocument;
-import in.transportstack.delhi.core.entity.master.AncillaryServiceMaster;
 import in.transportstack.delhi.core.entity.master.DataProviderMaster;
 import in.transportstack.delhi.core.entity.type.UploadType;
 import in.transportstack.delhi.core.repository.DataSetDocumentRepository;
@@ -114,7 +113,6 @@ public class DataSetServiceImpl implements DataSetService {
                         .orElseThrow(() -> new EntityNotFoundException("DatasetTypeMaster not found"))
         );
 
-
         // Set Charging Model
         dataSet.setChargingModel(
                 chargingModelMasterRepository.findById(dataSetRequestDto.getChargingModelId())
@@ -126,7 +124,6 @@ public class DataSetServiceImpl implements DataSetService {
                 transportModeMasterRepository.findById(dataSetRequestDto.getTransportModeId())
                         .orElseThrow(() -> new EntityNotFoundException("TransportModeMaster not found"))
         );
-
 
         try {
             // Saving DataSet
@@ -155,14 +152,9 @@ public class DataSetServiceImpl implements DataSetService {
             dataSetDocument.setTitle(title);
             dataSetDocument.setUrl(uploadFileResponseDto.getFileUrl());
             dataSetDocument.setUploadType(fileUploadType);
-            dataSetDocument.setDocumentKey(uploadFileResponseDto.getFileName());
-            //dataSetDocument.setDataSet(new DataSet());
-            DataSetDocument dataSetDocumentObj=dataSetDocumentRepository.save(dataSetDocument);
-             return dataSetDocumentObj.getId();
+            dataSetDocument.setFileKey(uploadFileResponseDto.getFileName());
 
-
-
-
+            return dataSetDocumentRepository.save(dataSetDocument).getId();
 
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -184,7 +176,7 @@ public class DataSetServiceImpl implements DataSetService {
     public String deleteFile(UUID id) {
         Optional<DataSetDocument> dataSetDocument = dataSetDocumentRepository.findById(id);
         if (dataSetDocument.isPresent()) {
-            String fileKey = dataSetDocument.get().getDocumentKey();
+            String fileKey = dataSetDocument.get().getFileKey();
             fileService.delete(fileKey, bucketName);
             dataSetDocumentRepository.delete(dataSetDocument.get());
             return "Document deleted successfully " + id;

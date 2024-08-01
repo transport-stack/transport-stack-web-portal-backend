@@ -5,10 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
-import org.hibernate.validator.constraints.URL;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -36,21 +34,17 @@ public class DataSetDocument extends Auditable<String> {
     @Column(name = "upload_type", nullable = false)
     private UploadType uploadType;
 
-    @URL(
-        message = "Url is invalid",
-        regexp = "@URL(regexp = \"^(https?:\\\\/\\\\/)?([\\\\da-z.-]+)\\\\.([a-z.]{2,6})([/\\\\w .-]*)*\\\\/?$\\n\")"
-    )
     @NotBlank(message = "Url cannot be blank")
     @NotEmpty(message = "Url cannot be empty")
     @NotNull(message = "Url cannot be null")
     @Column(name = "url", nullable = false, unique = true)
     private String url;
 
-    @NotBlank(message = "key cannot be blank")
-    @NotEmpty(message = "key cannot be empty")
-    @NotNull(message = "key cannot be null")
-    @Column(name = "key", nullable = false)
-    private String key;
+    @NotBlank(message = "File key cannot be blank")
+    @NotEmpty(message = "File key cannot be empty")
+    @NotNull(message = "File key cannot be null")
+    @Column(name = "file_key", nullable = false)
+    private String fileKey;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "data_set_id")
