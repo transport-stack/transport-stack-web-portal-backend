@@ -3,6 +3,7 @@ package in.transportstack.delhi.usermanagement.mapper;
 import in.transportstack.delhi.core.entity.DataSet;
 import in.transportstack.delhi.core.entity.DataSetDocument;
 import in.transportstack.delhi.core.entity.master.DataProviderMaster;
+import in.transportstack.delhi.usermanagement.dto.DataSetListDto;
 import in.transportstack.delhi.usermanagement.dto.DataSetRequestDto;
 import org.mapstruct.*;
 
@@ -46,4 +47,24 @@ public interface DataSetMapper {
     default Set<UUID> licenseAgreementToLicenseAgreementIds(Set<DataSetDocument> licenseAgreement) {
         return licenseAgreement.stream().map(DataSetDocument::getId).collect(Collectors.toSet());
     }
+
+    @Mapping(source = "transportModeName", target = "transportMode.name")
+    @Mapping(source = "transportModeId", target = "transportMode.id")
+    @Mapping(source = "datasetTypeName", target = "datasetType.name")
+    @Mapping(source = "datasetTypeId", target = "datasetType.id")
+    @Mapping(source = "ancillaryServiceName", target = "ancillaryService.name")
+    @Mapping(source = "ancillaryServiceId", target = "ancillaryService.id")
+    DataSet toEntity(DataSetListDto dataSetListingDto);
+
+    @AfterMapping
+    default void linkDataProviders(@MappingTarget DataSet dataSet) {
+        dataSet.getDataProviders().forEach(dataProvider -> dataProvider.setDataSet(dataSet));
+    }
+
+    @InheritInverseConfiguration(name = "toEntity")
+    DataSetListDto toListingDto(DataSet dataSet);
+
+    @InheritConfiguration(name = "toEntity")
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    DataSet partialUpdate(DataSetListDto dataSetListingDto, @MappingTarget DataSet dataSet);
 }

@@ -7,11 +7,16 @@ import in.transportstack.delhi.core.repository.DataSetDocumentRepository;
 import in.transportstack.delhi.core.repository.DataSetRepository;
 import in.transportstack.delhi.sharedconfig.dto.UploadFileResponseDto;
 import in.transportstack.delhi.sharedconfig.service.FileService;
+import in.transportstack.delhi.usermanagement.dto.DataSetListDto;
 import in.transportstack.delhi.usermanagement.dto.DataSetRequestDto;
 import in.transportstack.delhi.usermanagement.dto.DataSetResponseDto;
 import in.transportstack.delhi.usermanagement.mapper.DataSetMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,6 +64,14 @@ public class DataSetServiceImpl implements DataSetService {
             log.error(e.getMessage());
             return new DataSetResponseDto(e.getMessage());
         }
+    }
+
+    @Override
+    public Page<DataSetListDto> getDataSetList(int page, int size, String sortBy, String sortDir) {
+        Sort sort = Sort.by(sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<DataSet> dataSets = dataSetRepository.findAllByIsSoftDeleteFalse(pageable);
+        return dataSets.map(dataSetMapper::toListingDto);
     }
 
     @Override

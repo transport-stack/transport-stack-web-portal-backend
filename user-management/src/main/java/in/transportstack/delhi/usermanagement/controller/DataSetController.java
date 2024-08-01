@@ -1,11 +1,13 @@
 package in.transportstack.delhi.usermanagement.controller;
 
 import in.transportstack.delhi.core.entity.type.UploadType;
+import in.transportstack.delhi.usermanagement.dto.DataSetListDto;
 import in.transportstack.delhi.usermanagement.dto.DataSetRequestDto;
 import in.transportstack.delhi.usermanagement.service.DataSetService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,15 @@ public class DataSetController {
     @PostMapping(value = "/create", consumes = {"application/json"})
     public ResponseEntity<?> createDataSet(@Valid @RequestBody DataSetRequestDto dataSetRequestDto) {
         return ResponseEntity.ok(dataSetService.createDataSet(dataSetRequestDto));
+    }
+
+    @GetMapping("/list")
+    public Page<DataSetListDto> getDataSetList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+        return dataSetService.getDataSetList(page, size, sortBy, sortDir);
     }
 
     @PostMapping(value = "/upload")
