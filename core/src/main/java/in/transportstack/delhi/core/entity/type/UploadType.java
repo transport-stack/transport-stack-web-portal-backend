@@ -7,8 +7,8 @@ public enum UploadType {
      DATASET_DOCUMENTATION("Documentation"),
      DATASET_DATASET_FILE("DataSet File"),
      DATASET_LICENSE("License"),
-     SERVICE_DOCUMENTATION("Documentation"),
-     SERVICE_LICENSE("License");
+     SERVICESET_DOCUMENTATION("Documentation"),
+     SERVICESET_LICENSE("License");
 
      private final String value;
 
