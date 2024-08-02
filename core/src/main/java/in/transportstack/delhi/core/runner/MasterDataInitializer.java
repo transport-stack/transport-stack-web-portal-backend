@@ -15,7 +15,7 @@ public class MasterDataInitializer implements CommandLineRunner {
     private final DataAccessTypeMasterRepository dataAccessTypeMasterRepository;
     private final DataProviderMasterRepository dataProviderMasterRepository;
     private final DatasetTypeMasterRepository datasetTypeMasterRepository;
-    private final ServiceProviderMasterRepository serviceProviderMasterRepository;
+    private final ServiceSetProviderMasterRepository serviceSetProviderMasterRepository;
     private final TransportModeMasterRepository transportModeMasterRepository;
 
     public MasterDataInitializer(
@@ -25,7 +25,7 @@ public class MasterDataInitializer implements CommandLineRunner {
             DataAccessTypeMasterRepository dataAccessTypeMasterRepository,
             DataProviderMasterRepository dataProviderMasterRepository,
             DatasetTypeMasterRepository datasetTypeMasterRepository,
-            ServiceProviderMasterRepository serviceProviderMasterRepository,
+            ServiceSetProviderMasterRepository serviceSetProviderMasterRepository,
             TransportModeMasterRepository transportModeMasterRepository
     ) {
         this.ancillaryServiceMasterRepository = ancillaryServiceMasterRepository;
@@ -34,7 +34,7 @@ public class MasterDataInitializer implements CommandLineRunner {
         this.dataAccessTypeMasterRepository = dataAccessTypeMasterRepository;
         this.dataProviderMasterRepository = dataProviderMasterRepository;
         this.datasetTypeMasterRepository = datasetTypeMasterRepository;
-        this.serviceProviderMasterRepository = serviceProviderMasterRepository;
+        this.serviceSetProviderMasterRepository = serviceSetProviderMasterRepository;
         this.transportModeMasterRepository = transportModeMasterRepository;
     }
 
@@ -93,9 +93,9 @@ public class MasterDataInitializer implements CommandLineRunner {
     }
 
     private void initServiceProviderMasterData() {
-        if (serviceProviderMasterRepository.count() == 0) {
+        if (serviceSetProviderMasterRepository.count() == 0) {
             Arrays.asList("DTC", "DIMTS", "GMCBL", "DMRC", "NMRC", "RMGL", "NCRTC", "MCD", "Transport Dept. (GNCTD)", "Transport Stack")
-                    .forEach(name -> serviceProviderMasterRepository.save(new ServiceProviderMaster(name)));
+                    .forEach(name -> serviceSetProviderMasterRepository.save(new ServiceSetProviderMaster(name)));
         }
     }
 

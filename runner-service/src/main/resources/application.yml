@@ -1,3 +1,80 @@
 spring:
   application:
     name: runner-service
+
+  datasource:
+    url: jdbc:mysql://delhi-transportstack-db-cluster-dev.cluster-c5qkk0gg2axi.ap-south-1.rds.amazonaws.com:3306/delhi_transportstack
+    username: shwetak-app-dev
+    password: 3zoREOZm24Ciaag
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  security:
+    oauth2:
+      client:
+        registration:
+          cognito:
+            client-id: joicng34vtnld0g0umn0gon94
+            client-secret:
+            scope: openid
+        provider:
+          cognito:
+          issuer-uri: https://cognito-idp.ap-south-1.amazonaws.com/ap-south-1_RZHvCpZHy
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://cognito-idp.ap-south-1.amazonaws.com/ap-south-1_RZHvCpZHy/.well-known/jwks.json
+
+  mail:
+    host: email-smtp.us-east-1.amazonaws.com
+    port: 587
+    username: AKIA47CRVVSLWBLSU6FA
+    password: BDh8v7dX9ZTQj6ZJdfvCorlz0G6bBFvo8g3fHv4Lw+2q
+    protocol: smtp
+    properties:
+      mail:
+        smtp.auth: true
+        smtp:
+          starttls:
+            enable: true
+
+server:
+  port: 8080
+  tomcat:
+    connection-timeout: 60000
+
+logging:
+  level:
+    org.apache.coyote.http11: DEBUG
+    org.apache.tomcat.util.net: DEBUG
+
+jwt:
+  jwe-key-value: classpath:rsa-key.priv
+
+aws:
+  accessKeyId: AKIA3QPX36QORCIJRYO6
+  secretKey: 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
+  region: ap-south-1
+  userPoolId: ap-south-1_RZHvCpZHy
+
+
+cloud:
+  aws:
+    credentials:
+      access-key: AKIA47CRVVSL6IH7KGHD
+      secret-key: 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
+    region:
+      static: ap-south-1
+
+encryptionUtil:
+  key: DelhiTrans@2067!
+
+application:
+  bucket:
+    name: bcgbucket23072024
+
+#server:
+#  max-http-request-header-size: 10MB
+

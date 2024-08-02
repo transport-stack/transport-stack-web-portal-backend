@@ -9,5 +9,5 @@ import java.io.IOException;
 public interface FileService {
     UploadFileResponseDto upload(MultipartFile file, String bucketName) throws IOException;
     byte[] download(String key, String bucketName);
-    DeleteFileResponseDto delete(String key, String bucketName);
+    DeleteFileResponseDto delete(String fileKey, String bucketName);
 }

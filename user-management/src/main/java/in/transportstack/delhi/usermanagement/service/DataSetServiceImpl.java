@@ -45,7 +45,6 @@ public class DataSetServiceImpl implements DataSetService {
     private final DataAccessTypeMasterRepository dataAccessTypeMasterRepository;
     private final DataProviderMasterRepository dataProviderMasterRepository;
     private final DatasetTypeMasterRepository datasetTypeMasterRepository;
-    private final ServiceProviderMasterRepository serviceProviderMasterRepository;
     private final TransportModeMasterRepository transportModeMasterRepository;
     public DataSetServiceImpl(
             DataSetMapper dataSetMapper,
@@ -58,7 +57,6 @@ public class DataSetServiceImpl implements DataSetService {
             DataAccessTypeMasterRepository dataAccessTypeMasterRepository,
             DataProviderMasterRepository dataProviderMasterRepository,
             DatasetTypeMasterRepository datasetTypeMasterRepository,
-            ServiceProviderMasterRepository serviceProviderMasterRepository,
             TransportModeMasterRepository transportModeMasterRepository
     ) {
         this.dataSetMapper = dataSetMapper;
@@ -70,7 +68,6 @@ public class DataSetServiceImpl implements DataSetService {
         this.dataAccessTypeMasterRepository=dataAccessTypeMasterRepository;
         this.dataProviderMasterRepository=dataProviderMasterRepository;
         this.datasetTypeMasterRepository=datasetTypeMasterRepository;
-        this.serviceProviderMasterRepository=serviceProviderMasterRepository;
         this.chargingModelMasterRepository=chargingModelMasterRepository;
         this.transportModeMasterRepository=transportModeMasterRepository;
     }

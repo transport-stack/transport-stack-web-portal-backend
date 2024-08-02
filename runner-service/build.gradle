@@ -8,6 +8,7 @@ plugins {
 dependencies {
     implementation project(':gateway-service')
     implementation project(':user-management')
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 }
@@ -23,3 +24,4 @@ jar {
 war {
     enabled = true
 }
+

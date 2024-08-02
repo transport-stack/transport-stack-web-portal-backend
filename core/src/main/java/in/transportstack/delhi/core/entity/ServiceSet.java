@@ -17,7 +17,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "service")
-public class Service extends Auditable<String> {
+public class ServiceSet extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -51,7 +51,7 @@ public class Service extends Auditable<String> {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "type_of_service_id")
-    private DatasetTypeMaster serviceType;
+    private ServiceSetTypeMaster serviceSetType;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ancillary_service_id")
@@ -61,8 +61,8 @@ public class Service extends Auditable<String> {
     @JoinColumn(name = "transport_mode_id")
     private TransportModeMaster transportMode;
 
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ServiceProviderMaster> serviceProviders = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "serviceSet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ServiceSetProviderMaster> serviceProviders = new LinkedHashSet<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "approval_mechanism_id")
@@ -72,11 +72,11 @@ public class Service extends Auditable<String> {
     @JoinColumn(name = "charging_model_id")
     private ChargingModelMaster chargingModel;
 
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ServiceDocument> serviceDocuments = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "serviceSet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ServiceSetDocument> serviceSetDocuments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ServiceDocument> licenseAgreements = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "serviceSet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ServiceSetDocument> licenseAgreements = new LinkedHashSet<>();
 
     @Column(name = "is_soft_delete")
     private Boolean isSoftDelete;

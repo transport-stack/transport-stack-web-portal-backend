@@ -4,3 +4,14 @@ server:
 spring:
   application:
     name: user-management
+
+    datasource:
+      url: jdbc:mysql://delhi-transportstack-db-cluster-dev.cluster-c5qkk0gg2axi.ap-south-1.rds.amazonaws.com:3306/delhi_transportstack
+      username: shwetak-app-dev
+      password: 3zoREOZm24Ciaag
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    jpa:
+      properties:
+          dialect: org.hibernate.dialect.MySQL8Dialect
+          ddl-auto: update
+      show-sql: true
