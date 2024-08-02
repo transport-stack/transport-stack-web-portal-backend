@@ -17,6 +17,7 @@ public class MasterDataInitializer implements CommandLineRunner {
     private final DatasetTypeMasterRepository datasetTypeMasterRepository;
     private final ServiceSetProviderMasterRepository serviceSetProviderMasterRepository;
     private final TransportModeMasterRepository transportModeMasterRepository;
+    private final ServiceSetTypeMasterRepository serviceSetTypeMasterRepository;
 
     public MasterDataInitializer(
             AncillaryServiceMasterRepository ancillaryServiceMasterRepository,
@@ -26,7 +27,8 @@ public class MasterDataInitializer implements CommandLineRunner {
             DataProviderMasterRepository dataProviderMasterRepository,
             DatasetTypeMasterRepository datasetTypeMasterRepository,
             ServiceSetProviderMasterRepository serviceSetProviderMasterRepository,
-            TransportModeMasterRepository transportModeMasterRepository
+            TransportModeMasterRepository transportModeMasterRepository,
+            ServiceSetTypeMasterRepository serviceSetTypeMasterRepository
     ) {
         this.ancillaryServiceMasterRepository = ancillaryServiceMasterRepository;
         this.approvalMechanismMasterRepository = approvalMechanismMasterRepository;
@@ -36,6 +38,7 @@ public class MasterDataInitializer implements CommandLineRunner {
         this.datasetTypeMasterRepository = datasetTypeMasterRepository;
         this.serviceSetProviderMasterRepository = serviceSetProviderMasterRepository;
         this.transportModeMasterRepository = transportModeMasterRepository;
+        this.serviceSetTypeMasterRepository=serviceSetTypeMasterRepository;
     }
 
     @Override
@@ -48,6 +51,7 @@ public class MasterDataInitializer implements CommandLineRunner {
         this.initDatasetTypeMasterData();
         this.initServiceProviderMasterData();
         this.initTransportModeMasterData();
+        this.initServiceSetTypeMasterData();
     }
 
     private void initAncillaryServiceMasterData() {
@@ -103,6 +107,13 @@ public class MasterDataInitializer implements CommandLineRunner {
         if (transportModeMasterRepository.count() == 0) {
             Arrays.asList("Metro", "Bus", "Rapid Rail", "Road Transport").forEach(name ->
                     transportModeMasterRepository.save(new TransportModeMaster(name)));
+        }
+    }
+
+    private void initServiceSetTypeMasterData(){
+        if (serviceSetTypeMasterRepository.count() == 0) {
+            Arrays.asList("Core Transport", "Ancillary").forEach(name ->
+                    serviceSetTypeMasterRepository.save(new ServiceSetTypeMaster(name)));
         }
     }
 }

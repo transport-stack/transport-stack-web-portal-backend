@@ -99,10 +99,10 @@ public class ServiceSetServiceImpl implements ServiceSetService {
                 .collect(Collectors.toSet());
         serviceSet.setServiceProviders(serviceProviders);
 
-        // Set Dataset Type
+        // Set Serviceset Type
         serviceSet.setServiceSetType(
                 serviceSetTypeMasterRepository.findById(serviceSetRequestDto.getServiceSetTypeId())
-                        .orElseThrow(() -> new EntityNotFoundException("ServiceTypeMaster not found"))
+                        .orElseThrow(() -> new EntityNotFoundException("ServiceSetTypeMaster not found"))
         );
 
 
@@ -148,8 +148,8 @@ public class ServiceSetServiceImpl implements ServiceSetService {
             serviceSetDocument.setUploadType(fileUploadType);
             serviceSetDocument.setFileKey(uploadFileResponseDto.getFileName());
             //dataSetDocument.setDataSet(new DataSet());
-            ServiceSetDocument dataSetDocumentObj=serviceSetDocumentRepository.save(serviceSetDocument);
-             return dataSetDocumentObj.getId();
+            ServiceSetDocument serviceSetDocumentObj=serviceSetDocumentRepository.save(serviceSetDocument);
+             return serviceSetDocumentObj.getId();
 
 
 

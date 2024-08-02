@@ -16,7 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "service")
+@Table(name = "service_set")
 public class ServiceSet extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

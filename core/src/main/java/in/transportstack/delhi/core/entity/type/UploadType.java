@@ -4,15 +4,15 @@ import lombok.Getter;
 
 @Getter
 public enum UploadType {
-     DATASET_DOCUMENTATION("Documentation"),
-     DATASET_DATASET_FILE("DataSet File"),
-     DATASET_LICENSE("License"),
-     SERVICESET_DOCUMENTATION("Documentation"),
-     SERVICESET_LICENSE("License");
+    DATASET_DOCUMENTATION("Documentation"),
+    DATASET_FILE("DataSet File"),
+    DATASET_LICENSE("License"),
+    SERVICESET_DOCUMENTATION("Documentation"),
+    SERVICESET_LICENSE("License");
 
-     private final String value;
+    private final String value;
 
-     private UploadType(String value) {
-          this.value = value;
-     }
+    private UploadType(String value) {
+        this.value = value;
+    }
 }
