@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/service")
+@RequestMapping("/api/serviceset")
 @CrossOrigin(origins = "*")
 @Slf4j
 public class ServiceSetController {
@@ -34,7 +34,7 @@ public class ServiceSetController {
     }
 
     @GetMapping("/list")
-    public Page<ServiceSetListDto> getDataSetList(
+    public Page<ServiceSetListDto> getServiceSetList(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
