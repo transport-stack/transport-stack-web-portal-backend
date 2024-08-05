@@ -121,7 +121,25 @@ public class ServiceSetServiceImpl implements ServiceSetService {
 
         try {
             // Saving Service
-            serviceSetRepository.save(serviceSet);
+            serviceSet=serviceSetRepository.save(serviceSet);
+            // If documentIds[] is not null, iterate and update the service_id
+            if (serviceSetRequestDto.getDocumentIds() != null && !serviceSetRequestDto.getDocumentIds().isEmpty()) {
+                for (UUID documentId : serviceSetRequestDto.getDocumentIds()) {
+                    ServiceSetDocument document = serviceSetDocumentRepository.findById(documentId)
+                            .orElseThrow(() -> new EntityNotFoundException("ServiceSetDocument not found with id: " + documentId));
+                    document.setServiceSet(serviceSet);
+                    serviceSetDocumentRepository.save(document);
+                }
+            }
+            // If licenseAgreementIds[] is not null, iterate and update the service_id
+            if (serviceSetRequestDto.getLicenseAgreementIds() != null && !serviceSetRequestDto.getLicenseAgreementIds().isEmpty()) {
+                for (UUID licenseAgreementId : serviceSetRequestDto.getLicenseAgreementIds()) {
+                    ServiceSetDocument licenseAgreement = serviceSetDocumentRepository.findById(licenseAgreementId)
+                            .orElseThrow(() -> new EntityNotFoundException("ServiceSetDocument not found with id: " + licenseAgreementId));
+                    licenseAgreement.setServiceSet(serviceSet);
+                    serviceSetDocumentRepository.save(licenseAgreement);
+                }
+            }
             return new ServiceSetResponseDto("Service created successfully");
         } catch (Exception e) {
             log.error(e.getMessage());

@@ -124,7 +124,36 @@ public class DataSetServiceImpl implements DataSetService {
 
         try {
             // Saving DataSet
-            dataSetRepository.save(dataSet);
+            dataSet=dataSetRepository.save(dataSet);
+
+            // If documentIds[] is not null, iterate and update the data_set_id
+            if (dataSetRequestDto.getDocumentIds() != null && !dataSetRequestDto.getDocumentIds().isEmpty()) {
+                for (UUID documentId : dataSetRequestDto.getDocumentIds()) {
+                    DataSetDocument document = dataSetDocumentRepository.findById(documentId)
+                            .orElseThrow(() -> new EntityNotFoundException("DataSetDocument not found with id: " + documentId));
+                    document.setDataSet(dataSet);
+                    dataSetDocumentRepository.save(document);
+                }
+            }
+
+            // If licenseAgreementIds[] is not null, iterate and update the data_set_id
+            if (dataSetRequestDto.getLicenseAgreementIds() != null && !dataSetRequestDto.getLicenseAgreementIds().isEmpty()) {
+                for (UUID licenseAgreementId : dataSetRequestDto.getLicenseAgreementIds()) {
+                    DataSetDocument licenseAgreement = dataSetDocumentRepository.findById(licenseAgreementId)
+                            .orElseThrow(() -> new EntityNotFoundException("LicenseAgreement not found with id: " + licenseAgreementId));
+                    licenseAgreement.setDataSet(dataSet);
+                    dataSetDocumentRepository.save(licenseAgreement);
+                }
+            }
+            // If dataFileIds[] is not null, iterate and update the data_set_id
+            if (dataSetRequestDto.getDataFileIds() != null && !dataSetRequestDto.getDataFileIds().isEmpty()) {
+                for (UUID dataFileId : dataSetRequestDto.getDataFileIds()) {
+                    DataSetDocument dataFile = dataSetDocumentRepository.findById(dataFileId)
+                            .orElseThrow(() -> new EntityNotFoundException("DataFile not found with id: " + dataFileId));
+                    dataFile.setDataSet(dataSet);
+                    dataSetDocumentRepository.save(dataFile);
+                }
+            }
             return new DataSetResponseDto("DataSet created successfully");
         } catch (Exception e) {
             log.error(e.getMessage());
