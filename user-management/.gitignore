@@ -1,0 +1,49 @@
+# Compiled source files
+*.class
+
+# Log files
+*.log
+
+# Package Files #
+*.jar
+*.war
+
+# Virtual machine crash logs
+hs_err_pid*
+
+# Generated files
+target/
+
+# Gradle specific files
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IntelliJ IDEA files
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+*.tmp
+
+# Test result files
+test-output/
+
+# Spring Boot specific files
+spring.log
+
+# Environment variables
+.env
+*.env
